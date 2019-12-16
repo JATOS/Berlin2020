@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="plotly-latest.min.js"></script>
+</head>
+
+<body>
+    <div id="Plot_absoluteTimes"> </div>
+    <div id="Plot_differenceTimes"> </div>
+    <script type="text/javascript">
+        var timing = { "observed": [], "expected": [], "obs_difference": [] };
+        var tstart = performance.now();
+        var interval = 4; //4 ms is minimum delay, see: https://stackoverflow.com/questions/9647215/what-is-minimum-millisecond-value-of-settimeout
+        var ntimepoints = 1000;
+        var i = 0;
+        var intervalID = setInterval(function () {
+            collectTime(i, interval);
+            if (++i === ntimepoints) {
+                window.clearInterval(intervalID);
+                getTimeDifference();
+                plotResults();
+            }
+        }, interval);
+        function collectTime(i, interval) {
+            var newtime = performance.now() - tstart;
+            timing.observed.push(newtime);
+            timing.expected.push(i * interval);
+        };
+        function getTimeDifference() {
+            for (var j=0; j<ntimepoints; j++ ){
+                timing.obs_difference.push(timing.observed[j+1]-timing.observed[j]);
+            }
+        };
+        function plotResults() {
+            var dataAbs = [
+                {x: timing.expected, y: timing.observed, type: 'scatter' }
+            ];
+            var layoutAbs = {
+                xaxis: { title: 'Expected time since t0 (ms)' },
+                yaxis: { title: 'Measured time since t0 (ms)' }
+            };
+            Plotly.newPlot('Plot_absoluteTimes', dataAbs, layoutAbs);
+            var dataDiff = [
+                {x: timing.expected.splice(0,timing.expected.length-1), y: timing.obs_difference, type: 'scatter' }
+            ];
+            var layoutDiff = {
+                xaxis: { title: 'Expected time since t0 (ms)' },
+                yaxis: { title: 'Measured interval between two points (ms)' }
+            };
+            Plotly.newPlot('Plot_differenceTimes', dataDiff, layoutDiff);
+        };
+    </script>
+</body>
+
+</html>
