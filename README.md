@@ -2,4 +2,4 @@
 
 [checkJitteredTimes.html](assets/checkJitteredTimes.html)
 
-[plotly-latest.min.js](plotly-latest.min.js)
+[plotly-latest.min.js](assets/plotly-latest.min.js)
