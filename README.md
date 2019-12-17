@@ -15,7 +15,7 @@
 
 ## If you want to follow the examples you'll need:
 
-* [JATOS](www.jatos.org). Follow the [installation](http://www.jatos.org/Installation.html) instructions.
+* [JATOS](http://www.jatos.org/). Follow the [installation](http://www.jatos.org/Installation.html) instructions.
 * A text editor (e.g. [Visual studio code](https://code.visualstudio.com/) or another editor with HTML highlighting)
 * A modern browser, e.g. Firefox or Chrome
 
