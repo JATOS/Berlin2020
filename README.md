@@ -13,11 +13,11 @@
 
 [Prolific Example](https://github.com/JATOS/JATOS_examples/raw/master/examples/prolific_example.zip)
 
-## If you want to follow the examples you need:
+## If you want to follow the examples you'll need:
 
 * [JATOS](www.jatos.org). Follow the [installation](http://www.jatos.org/Installation.html) instructions.
 * A text editor (e.g. [Visual studio code](https://code.visualstudio.com/) or another editor with HTML highlighting)
-* A modern browser, e.g. Firfox or Chrome
+* A modern browser, e.g. Firefox or Chrome
 
 ## Any questions? Email us:
 
