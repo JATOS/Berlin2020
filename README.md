@@ -2,16 +2,21 @@
 
 ## Presentation slides (as pdf)
 
+We will upload them after (or closer to) the workshop. 
+
+
+## HTML examples used in the presentation
+
 [checkJitteredTimes.html](assets/checkJitteredTimes.html)
 
 [plotly-latest.min.js](assets/plotly-latest.min.js)
 
 
-## Examples used in the talk
+## Example studies used in the hands-on part
 
 [Snake Game](https://github.com/JATOS/JATOS_examples/raw/master/examples/snake_game.zip)
 
-[Prolific Example](https://github.com/JATOS/JATOS_examples/raw/master/examples/prolific_example.zip)
+We will upload an Arithmetics (with mouse-tracking) task closer to the workshop.  
 
 ## If you want to follow the examples you'll need:
 
