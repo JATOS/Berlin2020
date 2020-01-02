@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <h1>Events (<a href="https://developer.mozilla.org/en-US/docs/Web/Events">more possible</a>)</h1>
+    <p>mousemove: <code id="mousemove"></code></p>
+    <p>click: <code id="click"></code></p>
+    <p>keypress: <code id="keypress"></code></p>
+    <p>mouseleave: <code id="mouseleave"></code></p>
+    <p>mouseenter: <code id="mouseenter"></code></p>
+    <p>window blur: <code id="blur"></code></p>
+    <p>window focus: <code id="focus"></code></p>
+    <p>window resize: <code id="resize"></code></p>
+    <p>nework online: <code id="online"></code></p>
+    <p>network offline: <code id="offline"></code></p>
+
+    <h1>Browser info</h1>
+    <pre><code id="browserInfo"></code></pre>
+
+    <h1>System info</h1>
+    <pre><code id="systemInfo"></code></pre>
+
+    <h1>Use external services to get geo and IP info</h1>
+    <pre><code id="geoIpInfo"></code></pre>
+
+    <script>
+
+        addEventHandlers();
+        fillInfo();
+
+        function addEventHandlers() {
+            // All events: https://developer.mozilla.org/en-US/docs/Web/Events
+
+            $(window).on('mousemove', (e) => {
+                var entry = {
+                    time: Date.now(),
+                    x: e.pageX,
+                    y: e.pageY
+                };
+                $('#mousemove').html(JSON.stringify({ "mousemove": entry }));
+            });
+
+            $(window).on('click', (e) => {
+                var entry = {
+                    [e.type]: {
+                        time: Date.now(),
+                        x: e.pageX,
+                        y: e.pageY
+                    }
+                };
+                $('#click').html(JSON.stringify(entry));
+            });
+
+            $(window).on('keypress', (e) => {
+                var entry = {
+                    [e.type]: {
+                        time: Date.now(),
+                        key: String.fromCharCode(e.keyCode)
+                    }
+                };
+                $('#keypress').html(JSON.stringify(entry));
+            });
+
+            $(document).on('mouseleave mouseenter', (e) => {
+                var entry = { [e.type]: { time: Date.now() } }
+                $('#' + e.type).html(JSON.stringify(entry));
+            });
+
+            $(window).on('blur focus resize fullscreenchange volumechange offline online', (e) => {
+                var entry = { [e.type]: { time: Date.now() } }
+                $('#' + e.type).html(JSON.stringify(entry));
+            });
+        }
+
+        async function fillInfo() {
+            var browserInfo = await getBrowserInfo();
+            $("#browserInfo").html(JSON.stringify(browserInfo, null, 2));
+            var systemInfo = await getSystemInfo();
+            $("#systemInfo").html(JSON.stringify(systemInfo, null, 2));
+            var geoIpInfo = await getGeoIpInfo();
+            $("#geoIpInfo").html(JSON.stringify(geoIpInfo, null, 2));
+        }
+
+        async function getBrowserInfo() {
+            var info = {};
+            info.browser = getBrowserAndVersion();
+            info.vendor = navigator.vendor;
+            info.userAgent = navigator.userAgent;
+            info.language = navigator.language;
+            info.languages = navigator.languages;
+            info.cookieEnabled = navigator.cookieEnabled;
+            var cameraAndMicro = await timeout(3000, checkCameraAndMicro());
+            info.camera = cameraAndMicro.hasCamera ? cameraAndMicro.hasCamera : "unknown";
+            info.micro = cameraAndMicro.hasMicro ? cameraAndMicro.hasMicro : "unknown";
+            info.mimeTypes = getSupportedMimeTypes();
+            info.pdfSupport = 'application/pdf' in navigator.mimeTypes;
+            info.flashSupport = 'application/x-shockwave-flash' in navigator.mimeTypes;
+            info.javaSupport = 'application/x-java-applet' in navigator.mimeTypes;
+            return info;
+        }
+
+        async function getSystemInfo() {
+            var info = {};
+            info.ip = await timeout(2000, getIpViaRtc());
+            info.geoCoordinates = await timeout(3000, getGeoCoordsFromBrowser());
+            info.platform = navigator.platform;
+            info.screenHeight = window.screen.height;
+            info.screenWidth = window.screen.width;
+            info.touchScreen = detectTouchscreen();
+            info.maxTouchPoints = navigator.maxTouchPoints;
+            info.onLine = navigator.onLine;
+            info.battery = (await navigator.getBattery()).level
+            info.hardwareConcurrency = navigator.hardwareConcurrency;
+            // var networkInfo = navigator.connection; // only Chrome
+            // var deviceMemory = navigator.deviceMemory; // only Chrome
+            return info;
+        }
+
+        // From https://stackoverflow.com/a/35123097/1278769 (there are more APIs)
+        async function getGeoIpInfo() {
+            var info = {};
+            info.geoInfoFromIpApi = await $.getJSON('https://ipapi.co/json/');
+            info.geoInfoFromGeoIpLookup = await $.getJSON('https://json.geoiplookup.io/api?callback=?');
+            info.geoInfoFromIpify = await $.getJSON('https://api.ipify.org/?format=json');
+            return info;
+        }
+
+        function getGeoCoordsFromBrowser() {
+            return new Promise((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    reject('Geolocation is not supported by your browser');
+                } else {
+                    navigator.geolocation.getCurrentPosition(success, error);
+                }
+
+                function success(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    resolve({ latitude, longitude });
+                }
+
+                function error() {
+                    reject('Unable to retrieve your location');
+                }
+            });
+        }
+
+        // From https://stackoverflow.com/a/32841164/1278769
+        function getIpViaRtc() {
+            return new Promise((resolve, reject) => {
+                var w = window, a = new (w.mozRTCPeerConnection || w.webkitRTCPeerConnection)({ iceServers: [] }), b = () => { };
+                a.createDataChannel("");
+                a.createOffer(c => a.setLocalDescription(c, b, b), b);
+                a.onicecandidate = c => {
+                    try {
+                        c.candidate.candidate.match(/([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g).forEach(resolve)
+                    } catch (e) { }
+                }
+            }).catch(e => console.error(e))
+        }
+
+        function checkCameraAndMicro() {
+            var hasCamera = false;
+            var hasMicro = false;
+            if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+                return { hasCamera, hasMicro };
+            }
+            return new Promise((resolve, reject) => {
+                navigator.mediaDevices.enumerateDevices()
+                    .then((devices) => {
+                        devices.forEach((device) => {
+                            if (device.kind == "videoinput") hasCamera = true;
+                            if (device.kind == "audioinput") hasMicro = true;
+                        });
+                        resolve({ hasCamera, hasMicro });
+                    })
+                    .catch(function (err) {
+                        console.log(err.name + ": " + err.message);
+                        reject({ hasCamera, hasMicro });
+                    });
+            });
+        }
+
+        // From https://patrickhlauke.github.io/touch/touchscreen-detection/
+        function detectTouchscreen() {
+            var result = false;
+            if (window.PointerEvent && ('maxTouchPoints' in navigator)) {
+                // if Pointer Events are supported, just check maxTouchPoints
+                if (navigator.maxTouchPoints > 0) {
+                    result = true;
+                }
+            } else {
+                // no Pointer Events...
+                if (window.matchMedia && window.matchMedia("(any-pointer:coarse)").matches) {
+                    // check for any-pointer:coarse which mostly means touchscreen
+                    result = true;
+                } else if (window.TouchEvent || ('ontouchstart' in window)) {
+                    // last resort - check for exposed touch events API / event handler
+                    result = true;
+                }
+            }
+            return result;
+        }
+
+        function getSupportedMimeTypes() {
+            if (!navigator.mimeTypes) return [];
+
+            var types = [];
+            for (i = 0; i < navigator.mimeTypes.length; i++) {
+                types.push(navigator.mimeTypes[i].type);
+            }
+            return types;
+        }
+
+        // From https://stackoverflow.com/a/2401861/1278769
+        function getBrowserAndVersion() {
+            var ua = navigator.userAgent, tem,
+                M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+            if (/trident/i.test(M[1])) {
+                tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+                return 'IE ' + (tem[1] || '');
+            }
+            if (M[1] === 'Chrome') {
+                tem = ua.match(/\b(OPR|Edge)\/(\d+)/);
+                if (tem != null) return tem.slice(1).join(' ').replace('OPR', 'Opera');
+            }
+            M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
+            if ((tem = ua.match(/version\/(\d+)/i)) != null) M.splice(1, 1, tem[1]);
+            return M.join(' ');
+        }
+
+        // Adds a timeout to a promise
+        // From https://italonascimento.github.io/applying-a-timeout-to-your-promises/
+        function timeout(ms, promise) {
+            let timeout = new Promise((resolve, reject) => {
+                let id = setTimeout(() => {
+                    clearTimeout(id);
+                    resolve('Timed out after ' + ms + 'ms')
+                }, ms)
+            })
+
+            return Promise.race([
+                promise,
+                timeout
+            ])
+        }
+
+    </script>
+</body>
