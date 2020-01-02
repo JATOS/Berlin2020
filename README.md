@@ -15,6 +15,8 @@ We will upload them after (or closer to) the workshop.
 
 [arithmetics-task.html](assets/arithmetics-task.html)
 
+[demographics.html](assets/demographics.html)
+
 
 ## Example studies used in the hands-on part
 
