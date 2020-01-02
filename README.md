@@ -17,6 +17,7 @@ We will upload them after (or closer to) the workshop.
 
 [demographics.html](assets/demographics.html)
 
+[simple-rt-jspsych.html](assets/simple-rt-jspsych.html)
 
 ## Example studies used in the hands-on part
 
