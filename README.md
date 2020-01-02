@@ -11,6 +11,8 @@ We will upload them after (or closer to) the workshop.
 
 [plotly-latest.min.js](assets/plotly-latest.min.js)
 
+[browser-info-and-worker-tracking.html](assets/browser-info-and-worker-tracking.html)
+
 
 ## Example studies used in the hands-on part
 
