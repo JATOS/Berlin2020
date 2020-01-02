@@ -13,6 +13,8 @@ We will upload them after (or closer to) the workshop.
 
 [browser-info-and-worker-tracking.html](assets/browser-info-and-worker-tracking.html)
 
+[arithmetics-task.html](assets/arithmetics-task.html)
+
 
 ## Example studies used in the hands-on part
 
