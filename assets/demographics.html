@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/jquery"></script>
+    <script src="https://surveyjs.azureedge.net/1.1.29/survey.jquery.js"></script>
+    <link href="https://surveyjs.azureedge.net/1.1.29/modern.css" type="text/css" rel="stylesheet"/>
+</head>
+
+<body>
+    <div id="survey"></div>
+
+    <script>
+        runSurvey();
+
+        function runSurvey() {
+
+            Survey
+                .StylesManager
+                .applyTheme("modern");
+
+            var json = {
+                title: "Tell us more about you?",
+                "pages": [
+                    {
+                        "name": "page1",
+                        "elements": [
+                            {
+                                name: "birthdate",
+                                type: "text",
+                                inputType: "date",
+                                title: "Your birthdate:",
+                            },
+                            {
+                                name: "region",
+                                type: "dropdown",
+                                title: "What region do you live in?",
+                                choices: ["Africa", "Americas", "Asia", "Europe", "Oceania"]
+                            }, {
+                                name: "country",
+                                type: "dropdown",
+                                title: "What country do you live in?",
+                                choicesByUrl: {
+                                    url: "https://restcountries.eu/rest/v2/region/{region}",
+                                    valueName: "name"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "showQuestionNumbers": "off"
+            };
+
+            window.survey = new Survey.Model(json);
+
+            survey.onComplete.add((result) => {
+                console.log(JSON.stringify(result.data, null, 3));
+                //survey.clear(); // Hides completed message
+            });
+
+            $("#survey").Survey({ model: survey });
+        }
+
+    </script>
+</body>
+
+</html>
