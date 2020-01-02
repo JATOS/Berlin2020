@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="stylesheet" href="css/arithmetics-task.css" />
+	<meta name="viewport"
+		content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+</head>
+
+<body>
+
+	<div id="progressBar">
+		<div id="progress"></div>
+	</div>
+	<div id="instruction"></div>
+	<div id="responseBarContainer">
+		<div id="responseBar"></div>
+		<div id="responseLeftEnd">0</div>
+		<div id="responseRightEnd">10</div>
+	</div>
+	<div id="startButtonWrap">
+		<button id="startButton">Start</button>
+	</div>
+
+	<script>
+
+		var responseBar = document.querySelector('#responseBar');
+		var startButton = document.querySelector('#startButton');
+		var instruction = document.querySelector('#instruction');
+		var touchScreen = 'ontouchstart' in window || navigator.msMaxTouchPoints;
+
+		var trial = 0;
+		var operations = ["3 + 4", "2 + 5", "2 + 1", "1 + 5", "4 + 2", "3 + 6", "1 + 2", "0 + 8"];
+		var resultData = { "x": [], "y": [], "time": [] };
+		var pointer = { "x": [], "y": [], "time": [] };
+		// We need this to store the pointer x,y positions relative to the response bar
+		var responseBar = {
+			leftEnd: responseBar.getBoundingClientRect().left,
+			topEnd: responseBar.getBoundingClientRect().top
+		}
+
+		startNextTrial();
+
+		function startNextTrial() {
+			pointer.x = [];
+			pointer.y = [];
+			pointer.time = []
+			if (touchScreen) {
+				instruction.innerHTML = "Touch Start to begin next trial. <br> Touch and drag to the correct answer along the white bar.";
+			} else {
+				instruction.innerHTML = "Click Start to begin next trial. <br> Hold your mouse button down and drag to the correct answer along the white bar.";
+			}
+
+			addMultipleEventListener(startButton, ['mousedown', 'touchstart'], onPointerDown);
+		};
+
+		function onPointerDown(event) {
+			startButton.disabled = true;
+			instruction.innerHTML = operations[trial];
+
+			event.preventDefault();
+			removeMultipleEventListener(startButton, ['mousedown', 'touchstart'], onPointerDown);
+			addMultipleEventListener(document, ['mousemove', 'touchmove'], onPointerMove);
+		}
+
+		function onPointerMove(event) {
+			var pointerX = Math.round((event.clientX ? event.clientX : event.touches[0].clientX) - responseBar.leftEnd);
+			var pointerY = Math.round((event.clientY ? event.clientY : event.touches[0].clientY) - responseBar.topEnd);
+			pointer.x.push(pointerX);
+			pointer.y.push(pointerY);
+			pointer.time.push(performance.now());
+
+			addMultipleEventListener(document, ['mouseup', 'touchend'], onPointerUp);
+		}
+
+		function onPointerUp(event) {
+			startButton.disabled = false;
+			endTrial();
+
+			event.preventDefault();
+			removeMultipleEventListener(document, ['mousemove', 'touchmove'], onPointerMove);
+			removeMultipleEventListener(document, ['mouseup', 'touchend'], onPointerUp);
+			addMultipleEventListener(startButton, ['mousedown', 'touchstart'], onPointerDown);
+		}
+
+		function endTrial() {
+			resultData.x[trial] = pointer.x;
+			resultData.y[trial] = pointer.y;
+			resultData.time[trial] = pointer.time;
+
+			trial++;
+			var progress = trial / operations.length * 100;
+			document.querySelector("#progress").style.width = progress + '%';
+			if (trial < operations.length) {
+				startNextTrial();
+			} else {
+				endStudy();
+			}
+		};
+
+		function endStudy() {
+			console.log(resultData);
+		};
+
+		function addMultipleEventListener(element, events, handler) {
+			events.forEach(e => element.addEventListener(e, handler, false));
+		}
+
+		function removeMultipleEventListener(element, events, handler) {
+			events.forEach(e => element.removeEventListener(e, handler, false));
+		}
+
+	</script>
+</body>
+
+<style>
+	body {
+		font: 20px "Lucida Grande", "Helvetica Neue", sans-serif;
+		margin: 0;
+		padding: 0;
+		background-color: black;
+	}
+
+	#progressBar {
+		margin-top: 0;
+		width: 100%;
+		height: 4px;
+		background-color: white;
+	}
+
+	#progress {
+		width: 0%;
+		height: 4px;
+		background-color: #4CAF50;
+		line-height: 4px;
+		color: white;
+	}
+
+	#instruction {
+		text-align: center;
+		margin-bottom: 10px;
+		margin-top: 50px;
+		height: 3em;
+		color: white;
+	}
+
+	@media (orientation: portrait) {
+		#responseBarContainer {
+			width: 90%;
+			margin: auto;
+		}
+	}
+
+	@media (orientation: landscape) {
+		#responseBarContainer {
+			width: 50%;
+			margin: auto;
+		}
+	}
+
+	#responseBar {
+		margin-top: 100px;
+		width: 100%;
+		height: 30px;
+		background-color: white;
+		border-radius: 3px;
+		line-height: 30px;
+		color: white;
+	}
+
+	#responseLeftEnd {
+		float: left;
+		color: white;
+	}
+
+	#responseRightEnd {
+		float: right;
+		color: white;
+	}
+
+	#startButtonWrap {
+		text-align: center;
+		position: absolute;
+		bottom: 4em;
+		width: 100%;
+	}
+
+	#startButton {
+		background-color: #4CAF50;
+		border-radius: 3px;
+		border: 1px solid #18ab29;
+		cursor: pointer;
+		color: #ffffff;
+		padding: 16px 31px;
+		font: 20px "Lucida Grande", "Helvetica Neue", sans-serif;
+	}
+
+	#startButton:hover {
+		background-color: #409050;
+	}
+
+	#startButton:disabled {
+		border: 1px solid #999999;
+		background-color: #cccccc;
+		color: #666666;
+	}
+
+	#quit {
+		cursor: pointer;
+		padding: 0;
+		margin: 2em 0 0 2em;
+		position: absolute;
+		bottom: 1em;
+		right: 1em;
+		color: grey;
+	}
+</style>
+
+</html>
