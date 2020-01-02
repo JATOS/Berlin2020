@@ -21,7 +21,9 @@ We will upload them after (or closer to) the workshop.
 
 ## Example studies used in the hands-on part
 
-[Snake Game](https://github.com/JATOS/JATOS_examples/raw/master/examples/snake_game.zip)
+We will play the Snake Game hosted on our BCCN server. [Click](https://studies.bccn-berlin.de/publix/17/start?batchId=20&generalMultiple) to join. 
+
+You can find the [code for the game](https://github.com/JATOS/JATOS_examples/raw/master/examples/snake_game.zip) in our Examples page 
 
 We will upload an Arithmetics (with mouse-tracking) task closer to the workshop.  
 
