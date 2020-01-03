@@ -125,7 +125,7 @@
         async function getGeoIpInfo() {
             var info = {};
             info.geoInfoFromIpApi = await $.getJSON('https://ipapi.co/json/');
-            info.geoInfoFromGeoIpLookup = await $.getJSON('https://json.geoiplookup.io/api?callback=?');
+            info.geoInfoFromGeoIpLookup = await $.getJSON('https://json.geoiplookup.io');
             info.geoInfoFromIpify = await $.getJSON('https://api.ipify.org/?format=json');
             return info;
         }
