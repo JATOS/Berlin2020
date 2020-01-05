@@ -64,7 +64,7 @@
     var test_procedure = {
         timeline: [fixation, test],
         timeline_variables: test_stimuli,
-        repetitions: 5,
+        repetitions: 2,
         randomize_order: true
     }
     timeline.push(test_procedure);
@@ -86,7 +86,7 @@
     jsPsych.init({
         timeline: timeline,
         on_finish: function () {
-            console.log(jsPsych.data.get().json());
+            jsPsych.data.displayData();
         }
     });
 </script>

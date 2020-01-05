@@ -11,15 +11,7 @@ We will upload them after (or closer to) the workshop.
 
 [plotly-latest.min.js](assets/plotly-latest.min.js)
 
-[Hello-World.html](assets/Hello-World.html)
-
 [browser-info-and-worker-tracking.html](assets/browser-info-and-worker-tracking.html)
-
-[arithmetics-task.html](assets/arithmetics-task.html)
-
-[demographics.html](assets/demographics.html)
-
-[simple-rt-jspsych.html](assets/simple-rt-jspsych.html)
 
 ## Example studies used in the hands-on part
 

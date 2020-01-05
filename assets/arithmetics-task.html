@@ -2,9 +2,7 @@
 <html>
 
 <head>
-	<link rel="stylesheet" href="css/arithmetics-task.css" />
-	<meta name="viewport"
-		content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
 </head>
 
 <body>
@@ -13,6 +11,7 @@
 		<div id="progress"></div>
 	</div>
 	<div id="instruction"></div>
+	<div id="resultData"></div>
 	<div id="responseBarContainer">
 		<div id="responseBar"></div>
 		<div id="responseLeftEnd">0</div>
@@ -24,19 +23,20 @@
 
 	<script>
 
-		var responseBar = document.querySelector('#responseBar');
-		var startButton = document.querySelector('#startButton');
-		var instruction = document.querySelector('#instruction');
+		var responseBarDiv = document.querySelector('#responseBarContainer');
+		var startButtonDiv = document.querySelector('#startButtonWrap');
+		var instructionDiv = document.querySelector('#instruction');
+		var resultDataDiv = document.querySelector('#resultData');
 		var touchScreen = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 
 		var trial = 0;
-		var operations = ["3 + 4", "2 + 5", "2 + 1", "1 + 5", "4 + 2", "3 + 6", "1 + 2", "0 + 8"];
+		var operations = ["3 + 4", "2 + 6", "2 + 1"];
 		var resultData = { "x": [], "y": [], "time": [] };
 		var pointer = { "x": [], "y": [], "time": [] };
 		// We need this to store the pointer x,y positions relative to the response bar
-		var responseBar = {
-			leftEnd: responseBar.getBoundingClientRect().left,
-			topEnd: responseBar.getBoundingClientRect().top
+		var responseBarPosition = {
+			leftEnd: responseBarDiv.getBoundingClientRect().left,
+			topEnd: responseBarDiv.getBoundingClientRect().top
 		}
 
 		startNextTrial();
@@ -46,26 +46,26 @@
 			pointer.y = [];
 			pointer.time = []
 			if (touchScreen) {
-				instruction.innerHTML = "Touch Start to begin next trial. <br> Touch and drag to the correct answer along the white bar.";
+				instructionDiv.innerHTML = "Touch Start to begin next trial. <br> Touch and drag to the correct answer along the white bar.";
 			} else {
-				instruction.innerHTML = "Click Start to begin next trial. <br> Hold your mouse button down and drag to the correct answer along the white bar.";
+				instructionDiv.innerHTML = "Click Start to begin next trial. <br> Hold your mouse button down and drag to the correct answer along the white bar.";
 			}
 
-			addMultipleEventListener(startButton, ['mousedown', 'touchstart'], onPointerDown);
+			addMultipleEventListener(startButtonDiv, ['mousedown', 'touchstart'], onPointerDown);
 		};
 
 		function onPointerDown(event) {
-			startButton.disabled = true;
-			instruction.innerHTML = operations[trial];
+			startButtonDiv.disabled = true;
+			instructionDiv.innerHTML = operations[trial];
 
 			event.preventDefault();
-			removeMultipleEventListener(startButton, ['mousedown', 'touchstart'], onPointerDown);
+			removeMultipleEventListener(startButtonDiv, ['mousedown', 'touchstart'], onPointerDown);
 			addMultipleEventListener(document, ['mousemove', 'touchmove'], onPointerMove);
 		}
 
 		function onPointerMove(event) {
-			var pointerX = Math.round((event.clientX ? event.clientX : event.touches[0].clientX) - responseBar.leftEnd);
-			var pointerY = Math.round((event.clientY ? event.clientY : event.touches[0].clientY) - responseBar.topEnd);
+			var pointerX = Math.round((event.clientX ? event.clientX : event.touches[0].clientX) - responseBarPosition.leftEnd);
+			var pointerY = Math.round((event.clientY ? event.clientY : event.touches[0].clientY) - responseBarPosition.topEnd);
 			pointer.x.push(pointerX);
 			pointer.y.push(pointerY);
 			pointer.time.push(performance.now());
@@ -74,13 +74,13 @@
 		}
 
 		function onPointerUp(event) {
-			startButton.disabled = false;
+			startButtonDiv.disabled = false;
 			endTrial();
 
 			event.preventDefault();
 			removeMultipleEventListener(document, ['mousemove', 'touchmove'], onPointerMove);
 			removeMultipleEventListener(document, ['mouseup', 'touchend'], onPointerUp);
-			addMultipleEventListener(startButton, ['mousedown', 'touchstart'], onPointerDown);
+			addMultipleEventListener(startButtonDiv, ['mousedown', 'touchstart'], onPointerDown);
 		}
 
 		function endTrial() {
@@ -99,7 +99,11 @@
 		};
 
 		function endStudy() {
-			console.log(resultData);
+			responseBarDiv.style.display = "none";
+			startButtonDiv.style.display = "none";
+			instructionDiv.style.display = "none";
+			resultDataDiv.style.display = "block";
+			resultDataDiv.innerHTML = JSON.stringify(resultData, null, 2);
 		};
 
 		function addMultipleEventListener(element, events, handler) {
@@ -136,12 +140,18 @@
 		color: white;
 	}
 
+	#resultData {
+		display: none;
+		color: white;
+		text-align: center;
+	}
+
 	#instruction {
 		text-align: center;
+		color: white;
 		margin-bottom: 10px;
 		margin-top: 50px;
 		height: 3em;
-		color: white;
 	}
 
 	@media (orientation: portrait) {
@@ -159,23 +169,23 @@
 	}
 
 	#responseBar {
+		color: white;
+		background-color: white;
 		margin-top: 100px;
 		width: 100%;
 		height: 30px;
-		background-color: white;
 		border-radius: 3px;
 		line-height: 30px;
-		color: white;
 	}
 
 	#responseLeftEnd {
-		float: left;
 		color: white;
+		float: left;
 	}
 
 	#responseRightEnd {
-		float: right;
 		color: white;
+		float: right;
 	}
 
 	#startButtonWrap {
@@ -186,11 +196,11 @@
 	}
 
 	#startButton {
+		color: #ffffff;
 		background-color: #4CAF50;
 		border-radius: 3px;
 		border: 1px solid #18ab29;
 		cursor: pointer;
-		color: #ffffff;
 		padding: 16px 31px;
 		font: 20px "Lucida Grande", "Helvetica Neue", sans-serif;
 	}
@@ -203,16 +213,6 @@
 		border: 1px solid #999999;
 		background-color: #cccccc;
 		color: #666666;
-	}
-
-	#quit {
-		cursor: pointer;
-		padding: 0;
-		margin: 2em 0 0 2em;
-		position: absolute;
-		bottom: 1em;
-		right: 1em;
-		color: grey;
 	}
 </style>
 
