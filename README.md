@@ -33,6 +33,6 @@ lange.kristian@gmail.com
 
 elisa.filevich@gmail.com
 
-### After the workshop we'd be grateful if you could give us some feedback!
+### After the workshop 
 
-<iframe src="https://docs.google.com/forms/d/e/1FAIpQLScL8SoyggqDRLMUuKPaatKKkoZnb-t7MpgkJLjBzUc63RTr4A/viewform?embedded=true" width="640" height="2168" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+We'd be grateful if you could [give us some feedback!](https://docs.google.com/forms/d/e/1FAIpQLScL8SoyggqDRLMUuKPaatKKkoZnb-t7MpgkJLjBzUc63RTr4A/viewform?usp=sf_link)
