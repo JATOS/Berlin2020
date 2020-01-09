@@ -3,6 +3,7 @@
 ## Presentation slides (as pdf)
 
 [Overview slides](assets/BerlinJan2020_slides.pdf)
+
 [Live coding slides (HTML/JS/CSS/JSON)](assets/live-coding-slides-HTML-JS-CSS-JSON.pdf)
 
 ## HTML examples used in the presentation
