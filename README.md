@@ -2,8 +2,7 @@
 
 ## Presentation slides (as pdf)
 
-We will upload them after (or closer to) the workshop. 
-
+[Slides part 1 (overview)](assets/BerlinJan2020_slides.pdf) 
 
 ## HTML examples used in the presentation
 
