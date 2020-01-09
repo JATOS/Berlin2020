@@ -12,7 +12,7 @@
 
 ## Live coding part
 
-We will build a JATOS study from already existing files using HTML/JS/CSS and libraries like jsPsych and survey.js. You can [download this repository](https://github.com/JATOS/Berlin2020/archive/master.zip) that includes the files in the _assets_ folder
+We will build a JATOS study from already existing files using HTML/JS/CSS and libraries like jsPsych and survey.js. You can [download this repository](https://github.com/JATOS/Berlin2020/archive/master.zip) that includes the files in the _assets_ folder - or the [finished study](assets/live_coding_m_b_bccn_2020.jzip).
 
 ## Example studies
 
