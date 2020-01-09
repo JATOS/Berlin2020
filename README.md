@@ -21,7 +21,7 @@ We will build a JATOS study from [files](https://github.com/JATOS/Berlin2020/arc
 
 Snake game hosted on our BCCN server: [Click](https://studies.bccn-berlin.de/publix/17/start?batchId=20&generalMultiple) to join.
 
-[Binocular Rivalry](https://github.com/JATOS/JATOS_examples/raw/master/examples/binocular_rivalry.zip) with Google Cardboard
+[Binocular Rivalry](https://studies.bccn-berlin.de/publix/18/start?batchId=21&generalMultiple) with Google Cardboard
 
 All example studies and their source code are under [http://www.jatos.org/Example-Studies.html](http://www.jatos.org/Example-Studies.html)
 
