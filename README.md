@@ -23,7 +23,7 @@ Snake game hosted on our BCCN server: [Click](https://studies.bccn-berlin.de/pub
 
 All example studies and their source code are under [http://www.jatos.org/Example-Studies.html](http://www.jatos.org/Example-Studies.html)
 
-## If you want to follow the the live coding you'll need:
+## If you want to follow the live coding you'll need:
 
 * [JATOS](http://www.jatos.org/). Follow the [installation](http://www.jatos.org/Installation.html) instructions.
 * A text editor (e.g. [Visual studio code](https://code.visualstudio.com/) or another editor with HTML highlighting)
