@@ -1,4 +1,4 @@
-# Berlin2020
+# Running Studies Online - Mind & Brain / BCCN in Berlin 2020
 
 ## Presentation slides (as pdf)
 
